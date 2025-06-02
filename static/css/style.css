@@ -1,0 +1,575 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: #f5f5f5;
+  min-height: 100vh;
+  background-image: url("/static/img/wallpaper-threadscity.jpg");
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Loader */
+#overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.loader {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #f3f3f3;
+  border-top: 5px solid #3498db;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Main container - Modal */
+.container {
+  display: flex;
+  width: 90%;
+  max-width: 1000px;
+  height: 90vh;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+
+/* Left container - Sidebar */
+.container-left {
+  width: 280px;
+  padding: 30px 20px;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid #eee;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 30px;
+  position: relative;
+}
+
+.profile-img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  overflow: hidden;
+  background-image: url("/static/img/profile.png");
+  background-size: cover;
+  background-position: center;
+  flex-shrink: 0;
+}
+
+.profile-name {
+  flex: 1;
+  min-width: 0;
+}
+
+.profile-name h2 {
+  font-size: 1.1em;
+  color: #333;
+  margin-bottom: 3px;
+}
+
+.profile-name p {
+  font-size: 0.8em;
+  color: #666;
+}
+
+.menu {
+  flex: 1;
+  margin-top: 20px;
+}
+
+.search-holder {
+  margin-bottom: 20px;
+}
+
+.search-holder input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 0.9em;
+  background-color: #f5f5f5;
+  border: none;
+}
+
+.list ul {
+  list-style: none;
+}
+
+.list li {
+  margin-bottom: 5px;
+}
+
+.list a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  color: #333;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+}
+
+.list a i {
+  font-size: 1em;
+  width: 20px;
+  text-align: center;
+}
+
+.list a:hover {
+  background-color: #f0f0f0;
+}
+
+.list li.active a {
+  background-color: #e3f2fd;
+  color: #1976d2;
+  font-weight: bold;
+}
+
+/* Close button in sidebar */
+.close-button {
+  margin-top: auto;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+  text-align: center;
+}
+
+.close-button a {
+  color: #666;
+  text-decoration: none;
+  font-size: 0.9em;
+}
+
+/* Right container - Main Content */
+.container-right {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.hamburger-container {
+  display: none;
+  margin-bottom: 20px;
+}
+
+/* Burger icon (chỉ hiển thị trên mobile) */
+.burger {
+  width: 30px;
+  height: 20px;
+  position: relative;
+  cursor: pointer;
+  display: none;
+}
+
+.burger .line {
+  width: 100%;
+  height: 2px;
+  background-color: #333;
+  position: absolute;
+  transition: all 0.3s ease;
+}
+
+.burger .line:nth-child(1) {
+  top: 0;
+}
+.burger .line:nth-child(2) {
+  top: 50%;
+  transform: translateY(-50%);
+}
+.burger .line:nth-child(3) {
+  bottom: 0;
+}
+
+.burger.active .line:nth-child(1) {
+  transform: rotate(45deg);
+  top: 50%;
+}
+
+.burger.active .line:nth-child(2) {
+  opacity: 0;
+}
+
+.burger.active .line:nth-child(3) {
+  transform: rotate(-45deg);
+  bottom: 50%;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.header h2 {
+  color: #333;
+  font-size: 1.3em;
+}
+
+/* Style cho nút 3 chấm (placeholder) */
+.header .options-button {
+  width: 30px;
+  height: 30px;
+  background-color: #f0f0f0;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-weight: bold;
+  color: #666;
+}
+
+.card-holder {
+  flex: 1;
+  margin-bottom: 20px;
+}
+
+.date-group {
+  margin-bottom: 20px;
+}
+
+.date-header {
+  color: #666;
+  font-size: 1em;
+  margin-bottom: 10px;
+}
+
+/* Style cho từng task item */
+.card {
+  background-color: white;
+  border: none;
+  border-bottom: 1px solid #eee;
+  border-radius: 0;
+  padding: 12px 0;
+  margin-bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  transition: all 0.3s ease;
+}
+
+.card:last-child {
+  border-bottom: none;
+}
+
+.card:hover {
+  background-color: #f9f9f9;
+  box-shadow: none;
+}
+
+.card input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  flex-shrink: 0;
+  accent-color: #3498db;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.card input[type="checkbox"]:checked {
+  background-color: #3498db;
+  border-color: #3498db;
+}
+
+.card input[type="checkbox"]:hover {
+  border-color: #3498db;
+}
+
+.marker {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.marker span {
+  font-size: 1em;
+  color: #333;
+  transition: all 0.3s ease;
+}
+
+.marker.done span {
+  text-decoration: line-through;
+  color: #999;
+}
+
+.task-time {
+  font-size: 0.7em;
+  color: #999;
+}
+
+.bx-trash-alt {
+  color: #999;
+  cursor: pointer;
+  font-size: 1em;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.bx-trash-alt:hover {
+  color: #dc3545;
+}
+
+/* Style cho phần thêm task ở dưới cùng */
+.add-new {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: transparent;
+  padding: 0;
+  border-top: none;
+  margin-top: auto;
+}
+
+.card-new {
+  background-color: #333;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+}
+
+.group1 {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.group1 input[type="text"] {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1em;
+  background-color: #333;
+  color: white;
+  outline: none;
+}
+
+.group1 input[type="date"] {
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1em;
+  background-color: #333;
+  color: white;
+  outline: none;
+}
+
+.group1 input::placeholder {
+  color: #aaa;
+}
+
+/* Style cho icon '+' */
+.bx-plus {
+  color: white;
+  font-size: 1.5em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.bx-plus:hover {
+  color: #ccc;
+}
+
+/* Style cho icon lịch (nếu có) */
+/* Giả định bạn đang dùng Boxicons, cần tìm tên class icon lịch hoặc thêm icon mới */
+.group1 i.bx-calendar {
+  color: white;
+  font-size: 1.2em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.group1 i.bx-calendar:hover {
+  color: #ccc;
+}
+
+.no-tasks {
+  text-align: center;
+  color: #666;
+  padding: 20px;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  body {
+    align-items: flex-start;
+  }
+
+  .container {
+    width: 100%;
+    height: 100vh;
+    border-radius: 0;
+    box-shadow: none;
+    flex-direction: column;
+  }
+
+  .container-left {
+    position: fixed;
+    left: -300px;
+    top: 0;
+    bottom: 0;
+    z-index: 100;
+    width: 300px;
+    transition: left 0.3s ease;
+  }
+
+  .container-left.active {
+    left: 0;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  }
+
+  .hamburger-container {
+    display: block;
+    padding: 10px 20px 0;
+  }
+
+  .burger {
+    display: block;
+  }
+
+  .container-right {
+    padding: 10px;
+    padding-top: 0;
+  }
+
+  .group1 {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .group1 input[type="text"],
+  .group1 input[type="date"] {
+    width: 100%;
+  }
+
+  .add-new {
+    position: static;
+    margin-top: 20px;
+  }
+}
+
+/* Auth Pages Styles */
+.auth-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.auth-box {
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  /* box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); */
+  width: 100%;
+  max-width: 400px;
+}
+
+.auth-box h2 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 1.5rem;
+}
+
+.form-group {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.form-group i {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px 10px 10px 40px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1em;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+.btn {
+  width: 100%;
+  padding: 10px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  background-color: #2980b9;
+}
+
+.auth-links {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.auth-links a {
+  color: #3498db;
+  text-decoration: none;
+}
+
+.auth-links a:hover {
+  text-decoration: underline;
+}
+
+.error-message {
+  color: #dc3545;
+  text-align: center;
+  margin-bottom: 1rem;
+}
