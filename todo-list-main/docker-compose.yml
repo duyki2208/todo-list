@@ -1,0 +1,117 @@
+services:
+  api_service:
+    build:
+      context: .
+      dockerfile: services/api_service/Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      - TASK_SERVICE_URL=http://task_service:5001
+      - USER_SERVICE_URL=http://user_service:5002
+      - MONGODB_URI=mongodb://mongodb-primary:27017,mongodb-secondary-1:27017,mongodb-secondary-2:27017/?replicaSet=rs0
+    volumes:
+      - ./logs:/app/logs
+    depends_on:
+      - task_service
+      - user_service
+      - mongodb-primary
+      - mongodb-secondary-1
+      - mongodb-secondary-2
+    networks:
+      - todo_network
+
+  task_service:
+    build:
+      context: .
+      dockerfile: services/task_service/Dockerfile
+    ports:
+      - "5001:5001"
+    environment:
+      - MONGODB_URI=mongodb://mongodb-primary:27017,mongodb-secondary-1:27017,mongodb-secondary-2:27017/?replicaSet=rs0
+    volumes:
+      - ./logs:/app/logs
+    depends_on:
+      - mongodb-primary
+      - mongodb-secondary-1
+      - mongodb-secondary-2
+    networks:
+      - todo_network
+
+  user_service:
+    build:
+      context: .
+      dockerfile: services/user_service/Dockerfile
+    ports:
+      - "5002:5002"
+    environment:
+      - MONGODB_URI=mongodb://mongodb-primary:27017,mongodb-secondary-1:27017,mongodb-secondary-2:27017/?replicaSet=rs0
+    volumes:
+      - ./logs:/app/logs
+    depends_on:
+      - mongodb-primary
+      - mongodb-secondary-1
+      - mongodb-secondary-2
+    networks:
+      - todo_network
+
+  mongodb-primary:
+    image: mongo:latest
+    command: mongod --replSet rs0 --port 27017
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data_primary:/data/db
+      - ./logs:/var/log/mongodb
+    networks:
+      - todo_network
+
+  mongodb-secondary-1:
+    image: mongo:latest
+    command: mongod --replSet rs0 --port 27017
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongodb_data_secondary1:/data/db
+      - ./logs:/var/log/mongodb
+    networks:
+      - todo_network
+
+  mongodb-secondary-2:
+    image: mongo:latest
+    command: mongod --replSet rs0 --port 27017
+    ports:
+      - "27019:27017"
+    volumes:
+      - mongodb_data_secondary2:/data/db
+      - ./logs:/var/log/mongodb
+    networks:
+      - todo_network
+
+  mongo-init:
+    image: mongo:latest
+    depends_on:
+      - mongodb-primary
+      - mongodb-secondary-1
+      - mongodb-secondary-2
+    command: >
+      mongosh --host mongodb-primary:27017 --eval '
+        rs.initiate({
+          _id: "rs0",
+          members: [
+            {_id: 0, host: "mongodb-primary:27017"},
+            {_id: 1, host: "mongodb-secondary-1:27017"},
+            {_id: 2, host: "mongodb-secondary-2:27017"}
+          ]
+        });
+      '
+    networks:
+      - todo_network
+
+volumes:
+  mongodb_data_primary:
+  mongodb_data_secondary1:
+  mongodb_data_secondary2:
+
+networks:
+  todo_network:
+    driver: bridge

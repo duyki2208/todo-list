@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>To do list App</title>
+    <link
+      rel="manifest"
+      href="{{ url_for('static', filename='manifest.json') }}"
+    />
+    <meta name="theme-color" content="#1976d2" />
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+  </head>
+  <body>
+    <div id="overlay">
+      <div class="loader"></div>
+    </div>
+
+    <div class="container">
+      <div class="container-left" id="containerLeft">
+        <div class="profile center">
+          <div class="profile-img"></div>
+          <div class="profile-name">
+            <h2>{{ user.name }}</h2>
+            <p style="font-size: 0.95em; color: #888; margin-top: 2px">
+              {{ user.email }}
+            </p>
+          </div>
+        </div>
+
+        <div class="menu center">
+          <div class="search-holder">
+            <input
+              type="search"
+              name="search"
+              id="search"
+              placeholder="Search tasks..."
+            />
+          </div>
+          <div class="list">
+            <ul>
+              <li id="o1" class="active">
+                <a href="#"><i class="bx bx-sun"></i><span>My Day</span></a>
+              </li>
+              <li id="o2">
+                <a href="#"><i class="bx bx-grid"></i><span>This Week</span></a>
+              </li>
+              <li id="o3">
+                <a href="#"
+                  ><i class="bx bx-calendar-event"></i
+                  ><span>This Month</span></a
+                >
+              </li>
+              <li id="o4">
+                <a href="#"
+                  ><i class="bx bx-extension"></i><span>All Tasks</span></a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="logout center">
+          <hr />
+          <a href="{{ url_for('logout') }}" id="logoutLink"
+            ><i class="bx bx-log-out"></i><span>Logout</span></a
+          >
+        </div>
+      </div>
+
+      <div class="container-right">
+        <div class="hamburger-container">
+          <div class="burger" id="burgerIcon">
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
+          </div>
+        </div>
+
+        <div class="container-sub center">
+          <div class="header">
+            <h2 id="header_title">My Day</h2>
+          </div>
+
+          <div class="card-holder" id="TaskContainer">
+            <div class="no-tasks">No tasks found</div>
+          </div>
+
+          <div class="add-new">
+            <div class="card-new align">
+              <div class="group1">
+                <div style="width: 70%">
+                  <i class="bx bx-plus"></i>
+                  <input
+                    type="text"
+                    name="todo"
+                    id="todo"
+                    placeholder="Add a new task"
+                    required
+                  />
+                </div>
+                <div>
+                  <input type="date" name="date" id="duedate" required />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script>
+      // Register service worker
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", () => {
+          navigator.serviceWorker
+            .register("/static/js/sw.js")
+            .then((registration) => {
+              console.log("ServiceWorker registration successful");
+            })
+            .catch((err) => {
+              console.log("ServiceWorker registration failed: ", err);
+            });
+        });
+      }
+
+      // Hide loader
+      window.addEventListener("load", function () {
+        document.getElementById("overlay").style.display = "none";
+      });
+    </script>
+  </body>
+</html>
