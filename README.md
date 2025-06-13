@@ -26,17 +26,9 @@ it offers a clean and intuitive user interface with powerful task management cap
 
 ##  Quick Start
 
-1. **Clone & Setup**  
-   ```bash
-   git clone https://github.com/yourusername/todo-list.git
-   cd todo-list
-   python -m venv venv
-   venv\Scripts\activate  # Windows
-   source venv/bin/activate  # Linux/Mac
-   pip install -r requirements.txt
-   ````
 
-2. **Run**
+
+1. **Run on cmd**
 
    ```bash
    python app.py
