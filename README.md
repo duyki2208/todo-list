@@ -17,7 +17,7 @@ it offers a clean and intuitive user interface with powerful task management cap
 - Secure data storage  
 - Fast and reliable performance  
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 - **Backend**: Python Flask  
 - **Frontend**: HTML5, CSS3, JavaScript  
