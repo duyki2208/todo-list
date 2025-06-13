@@ -34,7 +34,7 @@ it offers a clean and intuitive user interface with powerful task management cap
    venv\Scripts\activate  # Windows
    source venv/bin/activate  # Linux/Mac
    pip install -r requirements.txt
-````
+   ````
 
 2. **Run**
 
