@@ -1,107 +1,63 @@
 
-# Python To-Do List Application
+#  Python To-Do List
 
-A modern To-Do List application built with Python Flask and modern web technologies.
+A modern task management application built with Python Flask.
 
-## Features
+##  Project Overview
 
-- Add, edit, and delete tasks  
-- Set due dates for tasks  
-- Filter tasks by day, week, or month  
-- Search functionality  
-- Responsive design for mobile devices  
-- Modern and clean user interface  
-- Persistent storage using JSON file
+This is a full-featured Todo List application that helps you manage your daily tasks efficiently.  
+Built with Python Flask for the backend and modern web technologies for the frontend,  
+it offers a clean and intuitive user interface with powerful task management capabilities.
 
-## Requirements
+**Key highlights:**
 
-- Python 3.7 or higher  
-- Flask 2.0.1  
-- Modern web browser
+- Simple and intuitive task management  
+- Real-time task updates  
+- Responsive design works on all devices  
+- Secure data storage  
+- Fast and reliable performance  
 
-## Installation
+## 🛠️ Tech Stack
 
-1. Clone the repository:
+- **Backend**: Python Flask  
+- **Frontend**: HTML5, CSS3, JavaScript  
+- **Database**: JSON Storage  
+- **Features**: Task CRUD, Date Filtering, Search, Responsive Design  
 
-```bash
-git clone https://github.com/your-username/todo_app.git
-cd todo_app
+##  Quick Start
+
+1. **Clone & Setup**  
+   ```bash
+   git clone https://github.com/yourusername/todo-list.git
+   cd todo-list
+   python -m venv venv
+   venv\Scripts\activate  # Windows
+   source venv/bin/activate  # Linux/Mac
+   pip install -r requirements.txt
 ````
 
-2. Create a virtual environment:
+2. **Run**
 
-```bash
-python -m venv venv
-```
+   ```bash
+   python app.py
+   ```
 
-3. Activate the virtual environment:
+##  Features
 
-* **Windows:**
+*  Add/Edit/Delete tasks
+*  Set due dates
+*  Search & Filter tasks
+*  Mobile responsive
+*  Dark/Light mode
 
-```bash
-venv\Scripts\activate
-```
+##  Links
 
-* **Linux/Mac:**
-
-```bash
-source venv/bin/activate
-```
-
-4. Install dependencies:
-
-```bash
-pip install -r requirements.txt
-```
-
-## Running the Application
-
-1. Start the Flask server:
-
-```bash
-python app.py
-```
-
-2. Open your web browser and navigate to:
-
-```
-http://localhost:5000
-```
-
-## Usage
-
-1. **Add a new task:**
-
-   * Enter task description in the text field
-   * Select a due date
-   * Click the plus icon or press Enter
-
-2. **Mark a task as complete:**
-
-   * Click the checkbox next to the task
-
-3. **Delete a task:**
-
-   * Click the trash icon next to the task
-   * Confirm deletion in the popup
-
-4. **Filter tasks:**
-
-   * Click on "My day" to see today's tasks
-   * Click on "This week" to see this week's tasks
-   * Click on "This month" to see this month's tasks
-   * Click on "All tasks" to see all tasks
-
-5. **Search tasks:**
-
-   * Use the search bar in the left sidebar
-   * Press Enter to search
-
-## Contributing
-
-Feel free to submit issues and enhancement requests!
+ Live version: https://todo-list-5y5x.onrender.com
 
 ---
 
-# todo-list
+Thank you!
+
+```
+
 
