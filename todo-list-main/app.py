@@ -17,10 +17,10 @@ app.secret_key = 'your-secret-key-123'
 
 # Cấu hình session
 app.config.update(
-    SESSION_COOKIE_SECURE=False,
+    SESSION_COOKIE_SECURE=True,
     SESSION_COOKIE_HTTPONLY=True,
     SESSION_COOKIE_SAMESITE='Lax',
-    PERMANENT_SESSION_LIFETIME=timedelta(days=1),
+    PERMANENT_SESSION_LIFETIME=timedelta(days=30),
     SESSION_REFRESH_EACH_REQUEST=True
 )
 
@@ -55,6 +55,7 @@ try:
     if not tasks_db.get('tasks'):
         logger.info("Initializing empty tasks database")
         tasks_db.set('tasks', {})
+        tasks_db.sync()
 except Exception as e:
     logger.error(f"Error initializing database: {str(e)}")
     logger.error(traceback.format_exc())
@@ -62,6 +63,29 @@ except Exception as e:
     users_db = PupDB('users.db')
     tasks_db = PupDB('tasks.db')
     tasks_db.set('tasks', {})
+    tasks_db.sync()
+
+@app.before_request
+def before_request():
+    # Kiểm tra và khởi tạo lại database nếu cần
+    try:
+        if not tasks_db.get('tasks'):
+            logger.info("Initializing empty tasks database")
+            tasks_db.set('tasks', {})
+            tasks_db.sync()
+    except Exception as e:
+        logger.error(f"Error in before_request: {str(e)}")
+        logger.error(traceback.format_exc())
+
+@app.teardown_appcontext
+def teardown_appcontext(exception=None):
+    # Đảm bảo dữ liệu được lưu trước khi đóng ứng dụng
+    try:
+        tasks_db.sync()
+        users_db.sync()
+    except Exception as e:
+        logger.error(f"Error in teardown_appcontext: {str(e)}")
+        logger.error(traceback.format_exc())
 
 def get_user(email):
     try:
@@ -84,6 +108,10 @@ def save_user(email, user_data):
 def get_user_tasks(user_id):
     try:
         tasks = tasks_db.get('tasks', {})
+        if not isinstance(tasks, dict):
+            logger.warning("Tasks is not a dictionary, resetting to empty dict")
+            tasks = {}
+            tasks_db.set('tasks', tasks)
         return {task_id: task for task_id, task in tasks.items() 
                 if task.get('user_id') == user_id}
     except Exception as e:
@@ -93,8 +121,13 @@ def get_user_tasks(user_id):
 def save_task(task_id, task_data):
     try:
         tasks = tasks_db.get('tasks', {})
+        if not isinstance(tasks, dict):
+            logger.warning("Tasks is not a dictionary, resetting to empty dict")
+            tasks = {}
         tasks[task_id] = task_data
         tasks_db.set('tasks', tasks)
+        # Đảm bảo dữ liệu được lưu vào file
+        tasks_db.sync()
     except Exception as e:
         logger.error(f"Error saving task: {str(e)}")
         raise
@@ -129,7 +162,7 @@ def login():
         logger.info(f"Login attempt for email: {email}")
         user = get_user(email)
         if user and check_password_hash(user['password'], password):
-            session.clear()  # Xóa session cũ
+            # Không xóa session cũ, chỉ cập nhật user_id
             session['user_id'] = email
             session.permanent = True
             logger.info(f"User {email} logged in successfully. Session: {session}")
@@ -141,7 +174,7 @@ def login():
                 session.get('user_id'),
                 httponly=True,
                 samesite='Lax',
-                max_age=86400
+                max_age=2592000  # 30 ngày tính bằng giây
             )
             logger.info(f"Response headers: {response.headers}")
             return response
@@ -201,6 +234,7 @@ def get_tasks():
         if not isinstance(tasks, dict):
             logger.warning("Tasks is not a dictionary, resetting to empty dict")
             tasks = {}
+            tasks_db.set('tasks', tasks)
             
         user_tasks = {task_id: task for task_id, task in tasks.items() 
                      if task.get('user_id') == session['user_id']}
@@ -267,6 +301,8 @@ def add_task():
         # Save to database
         try:
             tasks_db.set('tasks', tasks)
+            # Đảm bảo dữ liệu được lưu vào file
+            tasks_db.sync()
             logger.info("Task saved successfully")
             return jsonify(task_data)
         except Exception as e:
@@ -347,6 +383,35 @@ def delete_task(task_id):
 @app.route('/health')
 def health_check():
     return {"status": "healthy"}, 200
+
+def backup_database():
+    """Tạo bản sao lưu của database"""
+    try:
+        import shutil
+        from datetime import datetime
+        
+        # Tạo thư mục backup nếu chưa tồn tại
+        if not os.path.exists('backups'):
+            os.makedirs('backups')
+            
+        # Tạo tên file backup với timestamp
+        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        
+        # Backup tasks database
+        if os.path.exists('tasks.db'):
+            shutil.copy2('tasks.db', f'backups/tasks_{timestamp}.db')
+            
+        # Backup users database
+        if os.path.exists('users.db'):
+            shutil.copy2('users.db', f'backups/users_{timestamp}.db')
+            
+        logger.info(f"Database backup created at {timestamp}")
+    except Exception as e:
+        logger.error(f"Error creating database backup: {str(e)}")
+        logger.error(traceback.format_exc())
+
+# Tạo backup khi khởi động ứng dụng
+backup_database()
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True) 
