@@ -50,27 +50,6 @@ Key highlights:
 
 ## 🔗 Links
 
-- Live version : https://todo-list-5y5x.onrender.com/
+- Live version : https://todo-list-5y5x.onrender.com
 
-## 📦 Git Commands
-
-```bash
-# Khởi tạo Git repository
-git init
-
-# Thêm tất cả file vào staging
-git add .
-
-# Commit các thay đổi
-git commit -m "Your commit message"
-
-# Thêm remote repository
-git remote add origin https://github.com/yourusername/todo-list.git
-
-# Đẩy code lên GitHub
-git push -u origin main
-```
-
----
-
-⭐ Star this repo if you find it helpful!
+Thank you ~~
